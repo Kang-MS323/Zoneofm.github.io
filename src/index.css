@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+--font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+--font-serif: "Bebas Neue", sans-serif;
+--font-mono: "JetBrains Mono", monospace;
+
+--color-brand-paper: #111111;
+--color-brand-ink: #f3efe8;
+--color-brand-muted: #a5a5a5;
+--color-brand-meta: #7c7c7c;
+--color-brand-border: #2a2a2a;
+--color-brand-surface: #181818;
+--color-brand-hero: #141414;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-brand-paper text-brand-ink font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    @apply font-serif ;
+  }
+}
+
+@layer utilities {
+  .text-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  
+  .mask-oval {
+    mask-image: radial-gradient(circle, black 0%, black 60%, transparent 100%);
+    mask-size: cover;
+  }
+}
+.tile-about {
+  background: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+              url('/images/about.jpg') center/cover no-repeat;
+}
+
+.tile-film {
+  background: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+              url('/images/film.jpg') center/cover no-repeat;
+}
+
+.tile-photo {
+  background: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+              url('/images/photo.jpg') center/cover no-repeat;
+}
+
+.tile-design {
+  background: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+              url('/images/design.jpg') center/cover no-repeat;
+}
+.hero-home {
+  background: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+              url('/images/TURN.gif') center/cover no-repeat;
+}
+
+.brand-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.tile-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.tile-about,
+.tile-film,
+.tile-photo,
+.tile-design {
+  position: relative;
+  overflow: hidden;
+  transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+.tile-about::after,
+.tile-film::after,
+.tile-photo::after,
+.tile-design::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  transition: background 0.35s ease;
+  pointer-events: none;
+}
+
+.tile-about:hover::after,
+.tile-film:hover::after,
+.tile-photo:hover::after,
+.tile-design:hover::after {
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.tile-about:hover,
+.tile-film:hover,
+.tile-photo:hover,
+.tile-design:hover {
+  transform: scale(0.99);
+}
