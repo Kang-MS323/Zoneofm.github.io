@@ -474,6 +474,11 @@ const Design = () => {
   { title: "Wallpaper-watch", year: "2025", category: "기초 미디어 디자인", img: "/design/003.png", desc: "" },
   { title: "Wallpaper002", year: "2025", category: "기초 미디어 디자인", img: "/design/002.png", desc: "" },
   { title: "Wallpaper001", year: "2025", category: "기초 미디어 디자인", img: "/design/잠금해제.jpg", desc: "" },
+  { title: "emoticon", year: "2025", category: "기초 미디어 디자인", img: "/design/이모티콘.png", desc: "" },
+  { title: "poster001", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워001.png", desc: "" },
+  { title: "poster002", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워002.png", desc: "" },
+  { title: "poster003", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워003.png", desc: "" },
+
 ];
   return (
     <section id="design" className="section-design py-24 px-10 border-t border-brand-border">
