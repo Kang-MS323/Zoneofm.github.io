@@ -165,26 +165,30 @@ const DesignGrid = ({ items, onItemClick }: any) => {
   const [spans, setSpans] = useState<number[]>([]);
 
   useEffect(() => {
+    const toSpan = (w: number, h: number) => {
+      const renderedWidth = window.innerWidth >= 768
+        ? (window.innerWidth - 80) / 3
+        : (window.innerWidth - 40) / 2;
+      return Math.ceil((renderedWidth * (h / w) + 1) / 9);
+    };
+
     const calculateSpans = () => {
       const newSpans = items.map((item: any) => {
-        const img = new Image();
-        img.src = item.img;
         return new Promise<number>((resolve) => {
-          img.onload = () => {
-            const ratio = img.height / img.width;
-            const baseRowHeight = 8;
-            const gap = 1;
-            const renderedWidth = window.innerWidth >= 768
-              ? (window.innerWidth - 80) / 3
-              : (window.innerWidth - 40) / 2;
-            const renderedHeight = renderedWidth * ratio;
-            const span = Math.ceil((renderedHeight + gap) / (baseRowHeight + gap));
-            resolve(span);
-          };
-          img.onerror = () => resolve(30);
+          if (item.video) {
+            const v = document.createElement("video");
+            v.preload = "metadata";
+            v.src = item.video;
+            v.onloadedmetadata = () => resolve(toSpan(v.videoWidth, v.videoHeight));
+            v.onerror = () => resolve(30);
+          } else {
+            const img = new Image();
+            img.src = item.img;
+            img.onload = () => resolve(toSpan(img.width, img.height));
+            img.onerror = () => resolve(30);
+          }
         });
       });
-
       Promise.all(newSpans).then(setSpans);
     };
 
@@ -206,23 +210,23 @@ const DesignGrid = ({ items, onItemClick }: any) => {
           style={{ gridRow: `span ${spans[index] || 30}` }}
           className="group w-full overflow-hidden border border-brand-border/20 bg-black text-left"
         >
-          <img
-            src={item.img}
-            alt={item.title}
-            className="w-full h-full object-cover transition duration-500 group-hover:opacity-90"
-            referrerPolicy="no-referrer"
-          />
-
-          {/* 캡션은 기본 숨김
-          <div className="p-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-meta">
-              {item.title}
-            </p>
-            <p className="text-brand-muted leading-relaxed mt-2 text-[13px]">
-              {item.desc}
-            </p>
-          </div>
-          */}
+          {item.video ? (
+            <video
+              src={item.video}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              src={item.img}
+              alt={item.title}
+              className="w-full h-full object-cover transition duration-500 group-hover:opacity-90"
+              referrerPolicy="no-referrer"
+            />
+          )}
         </motion.button>
       ))}
     </div>
@@ -317,6 +321,8 @@ const Film = () => {
 
   const films = [
     { id: 1, title: "TURN", year: "2025", category: "Short Film", image: "/images/turn-thumb.jpg", video: "/videos/TURN.mp4", desc: "용기를 냈을 때 달라지는 건 나 자신이다. 친구와 이별하고 춤을 그만 둔 가연. 다시 몸을 움직여본다."
+  },
+   { id: 2, title: "On Photography", year: "2026", category: "Short Film", image: "/images/Onphotography-thumb.jpg", video: "/videos/OnPhotography.mp4", desc: "사진은 메멘토 모리이다."
   },
   
   ];
@@ -413,6 +419,10 @@ const Photo = () => {
     { url: "/photo/8.jpg", caption: "", desc: "" },
     { url: "/photo/9.jpg", caption: "", desc: "" },
     { url: "/photo/10.jpg", caption: "", desc: "" },
+    { url: "/photo/11.jpg", caption: "", desc: "" },
+    { url: "/photo/12.jpg", caption: "", desc: "" },
+    { url: "/photo/13.jpg", caption: "", desc: "" },
+    { url: "/photo/14.jpg", caption: "", desc: "" },
   ];
 
   return (
@@ -446,13 +456,13 @@ const Photo = () => {
               >
                 <X size={20} />
               </button>
-              <div className="bg-black flex items-center justify-center">
-  <img
-    src={selectedPhoto.url}
-    className="block max-w-[90vw] max-h-[80vh] w-auto h-auto"
-    referrerPolicy="no-referrer"
-  />
-</div>
+                           <div className="bg-black flex items-center justify-center">
+                <img
+                  src={selectedPhoto.url}
+                  className="block max-w-[90vw] max-h-[80vh] w-auto h-auto"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
               <div className="p-8 text-left">
                 <span className="font-mono text-[9px] text-brand-meta uppercase tracking-widest">Photograph / Archive</span>
                 <h2 className="text-2xl font-serif  mt-2 text-brand-ink">{selectedPhoto.caption}</h2>
@@ -471,14 +481,20 @@ const Photo = () => {
 const Design = () => {
   const [selectedDesign, setSelectedDesign] = useState<any>(null);
   const projects = [
-  { title: "Wallpaper-watch", year: "2025", category: "기초 미디어 디자인", img: "/design/003.png", desc: "" },
-  { title: "Wallpaper002", year: "2025", category: "기초 미디어 디자인", img: "/design/002.png", desc: "" },
-  { title: "Wallpaper001", year: "2025", category: "기초 미디어 디자인", img: "/design/잠금해제.jpg", desc: "" },
-  { title: "emoticon", year: "2025", category: "기초 미디어 디자인", img: "/design/이모티콘.png", desc: "" },
-  { title: "poster001", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워001.png", desc: "" },
-  { title: "poster002", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워002.png", desc: "" },
-  { title: "poster003", year: "2025", category: "크리에이티브 워크샵", img: "/design/크워003.png", desc: "" },
-
+  { title: "Wallpaper-watch", year: "2026", category: "기초 미디어 디자인", img: "/design/003.png", desc: "" },
+  { title: "Wallpaper002", year: "2026", category: "기초 미디어 디자인", img: "/design/002.png", desc: "" },
+  { title: "Wallpaper001", year: "2026", category: "기초 미디어 디자인", img: "/design/잠금해제.jpg", desc: "" },
+  { title: "emoticon", year: "2026", category: "기초 미디어 디자인", img: "/design/이모티콘.png", desc: "" },
+  { title: "poster001", year: "2026", category: "크리에이티브 워크샵", img: "/design/크워001.png", desc: "" },
+  { title: "poster002", year: "2026", category: "크리에이티브 워크샵", img: "/design/크워002.png", desc: "" },
+  { title: "poster003", year: "2026", category: "크리에이티브 워크샵", img: "/design/크워003.png", desc: "" },
+  { title: "poster004", year: "2026", category: "크리에이티브 워크샵", img: "/design/크워004.jpg", desc: "" },
+  { title: "magazine001", year: "2026", category: "사진과 디자인", img: "/design/사디001.jpg", desc: "" },
+  { title: "magazine002", year: "2026", category: "사진과 디자인", img: "/design/사디002.jpg", desc: "" },
+  { title: "magazine003", year: "2026", category: "사진과 디자인", img: "/design/사디003.jpg", desc: "" },
+  { title: "magazine004", year: "2026", category: "사진과 디자인", img: "/design/사디004.jpg", desc: "" },
+  { title: "catchtable", year: "2026", category: "기초 미디어 디자인", video: "/videos/catchtable.mp4", desc: "" },
+  { title: "kynapse landing", year: "2026", category: "한미랩", video: "/videos/keenups.mp4", desc: "" },
 ];
   return (
     <section id="design" className="section-design py-24 px-10 border-t border-brand-border">
@@ -513,12 +529,24 @@ const Design = () => {
     <X size={20} />
   </button>
 
-  <div className="bg-black flex items-center justify-center">
-    <img
-      src={selectedDesign.img}
-      className="block max-w-[90vw] max-h-[80vh] w-auto h-auto"
-      referrerPolicy="no-referrer"
-    />
+    <div className="bg-black flex items-center justify-center">
+    {selectedDesign.video ? (
+      <video
+        src={selectedDesign.video}
+        className="block max-w-[90vw] max-h-[80vh] w-auto h-auto"
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls
+      />
+    ) : (
+      <img
+        src={selectedDesign.img}
+        className="block max-w-[90vw] max-h-[80vh] w-auto h-auto"
+        referrerPolicy="no-referrer"
+      />
+    )}
   </div>
 
   {selectedDesign.title && (
